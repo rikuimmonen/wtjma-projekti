@@ -41,10 +41,15 @@ const getLocation = () => {
 
         let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000);
 
+
+        const timeLeftMinutes = ((time - new Date()) / 1000 / 60).toFixed(0);
+
+
+
         console.log(ride);
         const busRide = document.createElement('li');
 
-        busRide.innerHTML = `Aika: ${time.toISOString().split('T')[1].split('.')[0]} Bussi: ${ride.trip.routeShortName} Minne: ${ride.headsign}`  ;
+        busRide.innerHTML = `Aika: ${time.toISOString().split('T')[1].split('.')[0].slice(0, 5)} Bussi: ${ride.trip.routeShortName} Minne: ${ride.headsign} Minuuttia jäljellä: ${timeLeftMinutes} min`;
         busRides.appendChild(busRide);
       }
       busStop.appendChild(busStopName);
