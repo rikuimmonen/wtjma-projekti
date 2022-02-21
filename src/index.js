@@ -35,7 +35,7 @@ const getLocation = () => {
 
       const busStop = document.createElement('li');
       const busStopName = document.createElement('p');
-      busStopName.innerHTML ='Pysäkki: ' + stop.node.stop.name;
+      busStopName.innerHTML = `Pysäkki: ${stop.node.stop.name} ${stop.node.stop.code}`;
       const busRides = document.createElement('ul');
       for (const ride of stop.node.stop.stoptimesWithoutPatterns) {
 

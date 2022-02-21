@@ -35,6 +35,7 @@ const getQueryForStopsByLocation = (lat, lon) => {
       edges {
         node {
           stop {
+            code
             gtfsId
             name
             lat
