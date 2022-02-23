@@ -1,5 +1,8 @@
 import HSLData from "./modules/hsl-data";
 import { fetchData } from "./modules/network";
+import utils from "./modules/utils";
+import weatherData from "./modules/weather-data";
+
 
 fetchData(HSLData.apiUrl, {
   method: 'POST',
@@ -17,47 +20,68 @@ fetchData(HSLData.apiUrl, {
     </p>`;
 });
 
+
+
 const getLocation = () => {
   const success = (pos) => {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
 
     fetchData(HSLData.apiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/graphql'
-    },
-    body: HSLData.getQueryForStopsByLocation(lat, lon)
-  }).then(response => {
-    console.log(response);
-    const busList = document.querySelector('#bus-list');
-    for (const stop of response.data.stopsByRadius.edges) {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/graphql'
+      },
+      body: HSLData.getQueryForStopsByLocation(lat, lon)
+    }).then(response => {
+      console.log(response);
+      const busList = document.querySelector('#bus-list');
+      for (const stop of response.data.stopsByRadius.edges) {
 
-      const busStop = document.createElement('li');
-      const busStopName = document.createElement('p');
-      busStopName.innerHTML = `Pysäkki: ${stop.node.stop.name} ${stop.node.stop.code}`;
-      const busRides = document.createElement('ul');
-      for (const ride of stop.node.stop.stoptimesWithoutPatterns) {
+        const busStop = document.createElement('li');
+        const busStopName = document.createElement('p');
+        busStopName.innerHTML = `Pysäkki: ${stop.node.stop.name} ${stop.node.stop.code}`;
+        const busRides = document.createElement('ul');
+        for (const ride of stop.node.stop.stoptimesWithoutPatterns) {
 
-        let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000);
-
-
-        const timeLeftMinutes = ((time - new Date()) / 1000 / 60).toFixed(0);
+          let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000);
 
 
+          const timeLeftMinutes = ((time - new Date()) / 1000 / 60).toFixed(0);
 
-        console.log(ride);
-        const busRide = document.createElement('li');
+          const busRide = document.createElement('li');
 
-        busRide.innerHTML = `Aika: ${time.toISOString().split('T')[1].split('.')[0].slice(0, 5)} Bussi: ${ride.trip.routeShortName} Minne: ${ride.headsign} Minuuttia jäljellä: ${timeLeftMinutes} min`;
-        busRides.appendChild(busRide);
+          busRide.innerHTML = `Aika: ${time.toISOString().split('T')[1].split('.')[0].slice(0, 5)} Bussi: ${ride.trip.routeShortName} Minne: ${ride.headsign} Minuuttia jäljellä: ${timeLeftMinutes} min`;
+          busRides.appendChild(busRide);
+        }
+        busStop.appendChild(busStopName);
+
+        busList.appendChild(busStop);
+        busList.appendChild(busRides);
       }
-      busStop.appendChild(busStopName);
+    });
+    const weatherUrl = weatherData.getApiUrl(lat, lon);
 
-      busList.appendChild(busStop);
-      busList.appendChild(busRides);
-    }
-  });
+    fetchData(weatherUrl).then(response => {
+      console.log(response.properties);
+      const hour = new Date().getHours();
+      for (const time of response.properties.timeseries) {
+        if (hour == time.time.split('T')[1].split(':')[0]) {
+          const weatherSymbol = document.querySelector('#weather-symbol');
+          const temperatureP = document.querySelector('#temperature');
+          const windSpeedP = document.querySelector('#wind-speed');
+          const humidity = document.querySelector('#humidity');
+
+          weatherSymbol.setAttribute('src', 'assets/weathericon/' + time.data.next_1_hours.summary.symbol_code + '.svg');
+          temperatureP.innerHTML = time.data.instant.details.air_temperature + " \u2103";
+          windSpeedP.innerHTML = time.data.instant.details.wind_speed + ' ms';
+          humidity.innerHTML = time.data.instant.details.relative_humidity + ' %';
+          break;
+        }
+      }
+      console.log(hour);
+      console.log(response.properties.timeseries);
+    });
   };
   const err = () => {
     console.log('Unable to retrieve location');
@@ -73,4 +97,6 @@ const getLocation = () => {
 
 
 getLocation();
+
+
 
