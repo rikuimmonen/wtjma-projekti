@@ -3,7 +3,7 @@ import { fetchData } from "./modules/network";
 import utils from "./modules/utils";
 import weatherData from "./modules/weather-data";
 
-
+console.log(new Date());
 fetchData(HSLData.apiUrl, {
   method: 'POST',
   headers: {
@@ -13,7 +13,8 @@ fetchData(HSLData.apiUrl, {
 }).then(response => {
   console.log(response);
   const stop = response.data.stop;
-    let time = new Date((stop.stoptimesWithoutPatterns[0].realtimeArrival + stop.stoptimesWithoutPatterns[0].serviceDay) * 1000);
+  console.log(new Date((stop.stoptimesWithoutPatterns[0].serviceDay + stop.stoptimesWithoutPatterns[0].realtimeArrival) *1000+ 7200000).toISOString());
+    let time = new Date((stop.stoptimesWithoutPatterns[0].realtimeArrival + stop.stoptimesWithoutPatterns[0].serviceDay) * 1000 + 7200000);
     document.querySelector('#hsl').innerHTML = `<p>
       Pysäkki: ${stop.name} Bussi: ${stop.stoptimesWithoutPatterns[0].trip.routeShortName} Minne:  ${stop.stoptimesWithoutPatterns[0].headsign} Aika:
       ${time.toISOString().split('T')[1].split('.')[0]}
@@ -44,7 +45,7 @@ const getLocation = () => {
         const busRides = document.createElement('ul');
         for (const ride of stop.node.stop.stoptimesWithoutPatterns) {
 
-          let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000);
+          let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000 + 7200000);
 
 
           const timeLeftMinutes = ((time - new Date()) / 1000 / 60).toFixed(0);
