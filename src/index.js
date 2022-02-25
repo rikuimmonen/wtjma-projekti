@@ -48,7 +48,7 @@ const getLocation = () => {
           let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000 + 7200000);
 
 
-          const timeLeftMinutes = ((time - new Date()) / 1000 / 60).toFixed(0);
+          const timeLeftMinutes = ((time - new Date() -7200000) / 1000 / 60).toFixed(0);
 
           const busRide = document.createElement('li');
 
