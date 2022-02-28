@@ -238,7 +238,7 @@ const nextPage = (pageList, forward = true) => {
   location.hash = [...pageList.keys()][next];
 };
 
-const init = () => {
+const initApp = () => {
   const pageList = createPageList('main');
 
   createNav('nav', pageList);
@@ -280,4 +280,73 @@ const init = () => {
   */
 };
 
-init();
+/* SIGNAGE */
+
+const niceMinutes = (time) => {
+  const minutes = time.getMinutes();
+  if (minutes < 10) {
+    return '0' + minutes;
+  } else {
+    return minutes;
+  }
+};
+
+const clock = () => {
+  const time = new Date(Date.now());
+  const hours = time.getHours();
+
+  const minutes = niceMinutes(time);
+  return hours + '.' + minutes;
+};
+
+const carousel = (current, displayTime) => {
+  const slides = document.querySelectorAll('section');
+
+  if (current === slides.length) {
+    current = 0;
+  }
+
+  slides.forEach((element, index) => {
+    if (index === current) {
+      element.style.display = 'block';
+    } else {
+      element.style.display = 'none';
+    }
+  });
+
+  document.querySelector('#pages').innerHTML = `${current + 1} / ${slides.length}`;
+
+  current++;
+
+  setInterval(() => carousel(current, displayTime), displayTime);
+};
+
+const initSignage = () => {
+  const header = document.querySelector('header');
+  header.innerHTML = `<div id="meta"><p id="clock"></p><p id="pages"></p></div>`;
+
+  document.querySelector('#clock').innerHTML = clock();
+  setInterval(() => document.querySelector('#clock').innerHTML = clock(), 1000);
+
+  carousel(0, 3000);
+
+  //const indicator = document.querySelector('#indicator');
+  //indicator.style.animation = `indicator ${displayTime / 1000}s linear infinite`;
+
+  /*
+  const lunchList = document.querySelector('#lunch ul');
+  let lunchFontSize = 1;
+  lunchList.style.lineHeight = 1.5;
+
+  while (lunchList.scrollHeight > lunchList.clientHeight) {
+    lunchFontSize = 0.95 * lunchFontSize;
+    lunchList.style.fontSize = lunchFontSize * 0.95 + 'em';
+  }
+  */
+};
+
+if (location.search) {
+  initSignage();
+} else {
+  initApp();
+}

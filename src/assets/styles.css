@@ -33,10 +33,6 @@ h2 {
   margin: 2rem 0;
 }
 
-table {
-  border-collapse: collapse;
-}
-
 #weather-section {
   background-color: aquamarine;
   width: fit-content;
@@ -71,6 +67,7 @@ table {
 }
 
 #hsl table {
+  border-collapse: collapse;
   text-align: left;
   width: 100%;
 }
@@ -102,3 +99,101 @@ table {
 #hsl td:nth-child(3), #hsl td:nth-child(3) {
   width: 58%;
 }
+
+/* SIGNAGE
+
+body#signage {
+  background: #333;
+  color: white;
+  font-family: arial, sans-serif;
+  line-height: 1.5em;
+}
+
+#meta {
+  border-bottom: 1px solid #fff;
+  padding: 1.25em 2em 1em;
+  display: flex;
+  justify-content: space-between;
+  line-height: 1;
+}
+
+main {
+  display: flex;
+}
+
+section {
+  position: absolute;
+  padding: 2em;
+  width: 100vw;
+  height: calc(100vh - 3.5em);
+}
+
+h1 {
+  font-size: 1.5em;
+  margin: 0 0 2rem;
+  line-height: 1;
+  color: white;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+tr {
+  border-bottom: 1px solid #fff;
+}
+
+tr+tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5em 0;
+}
+
+.linja,
+.pysakki {
+  border: 3px solid white;
+  margin: 0 0.5rem 0 0;
+  padding: 0.2rem 0.4rem;
+  font-size: .75em;
+  border-radius: 0.2rem;
+  font-weight: bold;
+}
+
+.pysakki {
+  margin: 0 0 0 .4rem;
+  font-weight: 400;
+  border: 1px solid white;
+}
+
+#lunch ul {
+  list-style: none;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+#lunch ul li+li {
+  margin-top: 1em;
+}
+
+#indicator {
+  position: absolute;
+  top: 0;
+  height: 0.25em;
+  background: #fff;
+}
+
+@keyframes indicator {
+  0% {
+      width: 0;
+  }
+
+  100% {
+      width: 100%;
+  }
+}
+*/
