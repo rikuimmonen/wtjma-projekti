@@ -4,6 +4,7 @@ import utils from "./modules/utils";
 import weatherData from "./modules/weather-data";
 import SodexoData from './modules/sodexo-data';
 import FazerData from './modules/fazer-data';
+import MyllyData from './modules/mylly-data';
 
 console.log(new Date());
 fetchData(HSLData.apiUrl, {
@@ -113,12 +114,18 @@ const printMenu = (menu, targetId) => {
   }
 };
 
+//Sodexo Myyrmäki
 fetchData(SodexoData.dataUrl).then(data => {
   const courses = SodexoData.createMenus(data.courses);
-  console.log('SODEXO COURSES', courses);
+  console.log('MYRTSI COURSES', courses);
   printMenu(courses, 'sodexoMenu');
 });
 
+//Sodexo Myllypuro
+fetchData(MyllyData.dataUrl).then(data => {
+  const courses = MyllyData.createMenus(data.courses);
+  console.log('MYLLYPURO', courses);
+});
 
 const getDayIndex = () => {
   let weekday = new Date().getDay() - 1;
@@ -131,6 +138,7 @@ const getDayIndex = () => {
   return weekday;
 };
 
+//Fazer Karaportti
 fetchData(FazerData.dataUrlFi, {},'fazer-php').then(data => {
   const courses = FazerData.createDayMenu(data.LunchMenus, getDayIndex());
   console.log('FAZER COURSES', courses);
