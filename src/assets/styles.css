@@ -1,6 +1,40 @@
 * {
-
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  font-size: clamp(0.875em, 2.4vw, 1.25em);
+}
+
+body {
+  line-height: 1.5em;
+  font-family: sans-serif;
+}
+
+header {
+  padding: 1em;
+  border-bottom: 1px solid #000;
+}
+
+h1 {
+  font-size: 1em;
+}
+
+main {
+  padding: 1em;
+}
+
+h2 {
+  font-size: 2em;
+  line-height: 1;
+  font-weight: 400;
+  margin: 2rem 0;
+}
+
+table {
+  border-collapse: collapse;
 }
 
 #weather-section {
@@ -19,4 +53,52 @@
 }
 .weather-list-item {
   margin: 0 10px;
+}
+
+
+#hsl h3 {
+  font-size: 1em;
+  margin: 3em 0 1em;
+}
+
+#hsl .stop-code {
+  border: 1px solid #666;
+  padding: 0.2em 0.4em;
+  font-weight: 400;
+  font-size: 0.8em;
+  border-radius: 0.2rem;
+  margin-left: 0.5rem;
+}
+
+#hsl table {
+  text-align: left;
+  width: 100%;
+}
+
+#hsl th {
+  border-bottom: 1px solid #333;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.1em;
+}
+
+#hsl td {
+  border-bottom: 1px solid #eee;
+}
+
+#hsl th, #hsl td {
+  padding: 0.2rem 0;
+}
+
+#hsl td:nth-child(1), #hsl td:nth-child(1) {
+  width: 25%;
+}
+
+#hsl td:nth-child(2), #hsl td:nth-child(2) {
+  width: 17%;
+}
+
+#hsl td:nth-child(3), #hsl td:nth-child(3) {
+  width: 58%;
 }
