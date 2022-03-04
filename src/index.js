@@ -24,16 +24,18 @@ fetchData(HSLData.apiUrl, {
     </p>`;
 });
 */
-
+const weatherTable = document.createElement('table');
 const renderWeather = (array) => {
   const hour = new Date().getHours();
   console.log(array);
   const weatherSection = document.querySelector('#weather-section');
-  const table = document.createElement('table');
-  table.setAttribute('id', 'weather-table');
+
+
+  weatherTable.setAttribute('id', 'weather-table');
+  weatherTable.innerHTML = '';
   const tableHeaders = ['Tänään', 'Huomenna', 'Ylihuomenna'];
   const weatherSymbol = document.querySelector('#weather-symbol');
-  weatherSection.appendChild(table);
+  weatherSection.appendChild(weatherTable);
   let i = 0;
   for (const time of array) {
     weatherSymbol.setAttribute('src', 'assets/weathericon/' + array[i].data.next_1_hours.summary.symbol_code + '.svg');
@@ -56,7 +58,7 @@ const renderWeather = (array) => {
       i++;
     }
 
-    table.appendChild(tr);
+    weatherTable.appendChild(tr);
 
 
     if (i > 2) {
