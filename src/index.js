@@ -58,23 +58,6 @@ const renderWeather = (array) => {
 
     table.appendChild(tr);
 
-    // if (hour == time.time.split('T')[1].split(':')[0]) {
-    //   console.log(time.time);
-    //   const li = document.createElement('li');
-    //   li.setAttribute('class', 'weather-day');
-    //   const ul = document.createElement('ul');
-    //   ul.setAttribute('class', 'day-list');
-    //   const listItemTemperature = document.createElement('li');
-    //   listItemTemperature.setAttribute('class', 'weather-list-item');
-    //   const temperatureP = document.createElement('p');
-    //   temperatureP.innerHTML = time.data.instant.details.air_temperature + " \u2103";
-
-    //   listItemTemperature.appendChild(temperatureP);
-    //   ul.appendChild(listItemTemperature);
-    //   li.appendChild(ul);
-    //   weatherSection.appendChild(li);
-    //   i++;
-    // }
 
     if (i > 2) {
       break;
