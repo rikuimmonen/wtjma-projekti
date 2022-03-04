@@ -102,3 +102,6 @@ table {
 #hsl td:nth-child(3), #hsl td:nth-child(3) {
   width: 58%;
 }
+#weather-table td {
+  padding: 10px;
+}

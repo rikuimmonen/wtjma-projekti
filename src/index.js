@@ -27,20 +27,73 @@ fetchData(HSLData.apiUrl, {
 
 const renderWeather = (array) => {
   const hour = new Date().getHours();
+  console.log(array);
+  const weatherSection = document.querySelector('#weather-section');
+  const table = document.createElement('table');
+  table.setAttribute('id', 'weather-table');
+  const tableHeaders = ['Tänään', 'Huomenna', 'Ylihuomenna'];
+  const weatherSymbol = document.querySelector('#weather-symbol');
+  weatherSection.appendChild(table);
+  let i = 0;
   for (const time of array) {
-    if (hour == time.time.split('T')[1].split(':')[0]) {
-      const weatherSymbol = document.querySelector('#weather-symbol');
-      const temperatureP = document.querySelector('#temperature');
-      const windSpeedP = document.querySelector('#wind-speed');
-      const humidity = document.querySelector('#humidity');
+    weatherSymbol.setAttribute('src', 'assets/weathericon/' + array[i].data.next_1_hours.summary.symbol_code + '.svg');
+    const tr = document.createElement('tr');
+    const headerCell = document.createElement('th');
+    headerCell.innerHTML = tableHeaders[i];
 
-      weatherSymbol.setAttribute('src', 'assets/weathericon/' + time.data.next_1_hours.summary.symbol_code + '.svg');
-      temperatureP.innerHTML = time.data.instant.details.air_temperature + " \u2103";
-      windSpeedP.innerHTML = time.data.instant.details.wind_speed + ' ms';
+    if (hour == time.time.split('T')[1].split(':')[0]) {
+
+      const temperature = document.createElement('td');
+      temperature.innerHTML = time.data.instant.details.air_temperature + " \u2103";
+      const wind = document.createElement('td');
+      wind.innerHTML = time.data.instant.details.wind_speed + ' ms';
+      const humidity = document.createElement('td');
       humidity.innerHTML = time.data.instant.details.relative_humidity + ' %';
+      tr.appendChild(headerCell);
+      tr.appendChild(temperature);
+      tr.appendChild(wind);
+      tr.appendChild(humidity);
+      i++;
+    }
+
+    table.appendChild(tr);
+
+    // if (hour == time.time.split('T')[1].split(':')[0]) {
+    //   console.log(time.time);
+    //   const li = document.createElement('li');
+    //   li.setAttribute('class', 'weather-day');
+    //   const ul = document.createElement('ul');
+    //   ul.setAttribute('class', 'day-list');
+    //   const listItemTemperature = document.createElement('li');
+    //   listItemTemperature.setAttribute('class', 'weather-list-item');
+    //   const temperatureP = document.createElement('p');
+    //   temperatureP.innerHTML = time.data.instant.details.air_temperature + " \u2103";
+
+    //   listItemTemperature.appendChild(temperatureP);
+    //   ul.appendChild(listItemTemperature);
+    //   li.appendChild(ul);
+    //   weatherSection.appendChild(li);
+    //   i++;
+    // }
+
+    if (i > 2) {
       break;
     }
   }
+  // for (const time of array) {
+  //   if (hour == time.time.split('T')[1].split(':')[0]) {
+  //     const weatherSymbol = document.querySelector('#weather-symbol');
+  //     const temperatureP = document.querySelector('#temperature');
+  //     const windSpeedP = document.querySelector('#wind-speed');
+  //     const humidity = document.querySelector('#humidity');
+
+  //     weatherSymbol.setAttribute('src', 'assets/weathericon/' + time.data.next_1_hours.summary.symbol_code + '.svg');
+  //     temperatureP.innerHTML = time.data.instant.details.air_temperature + " \u2103";
+  //     windSpeedP.innerHTML = time.data.instant.details.wind_speed + ' ms';
+  //     humidity.innerHTML = time.data.instant.details.relative_humidity + ' %';
+  //     break;
+  //   }
+  // }
 };
 const getLocation = () => {
   const success = (pos) => {
