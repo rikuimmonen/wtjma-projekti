@@ -2,66 +2,12 @@ import HSLData from "./modules/hsl-data";
 import { fetchData } from "./modules/network";
 import utils from "./modules/utils";
 import weatherData from "./modules/weather-data";
-
-/*
-console.log(new Date());
-fetchData(HSLData.apiUrl, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/graphql'
-  },
-  body: HSLData.getQueryForNextRidesByStopId(2132207)
-}).then(response => {
-  console.log(response);
-  const stop = response.data.stop;
-  console.log(new Date((stop.stoptimesWithoutPatterns[0].serviceDay + stop.stoptimesWithoutPatterns[0].realtimeArrival) * 1000 + 7200000).toISOString());
-  let time = new Date((stop.stoptimesWithoutPatterns[0].realtimeArrival + stop.stoptimesWithoutPatterns[0].serviceDay) * 1000 + 7200000);
-  document.querySelector('#hsl').innerHTML = `<p>
-      Pysäkki: ${stop.name} Bussi: ${stop.stoptimesWithoutPatterns[0].trip.routeShortName} Minne:  ${stop.stoptimesWithoutPatterns[0].headsign} Aika:
-      ${time.toISOString().split('T')[1].split('.')[0]}
-    </p>`;
-});
-*/
+import app from "./modules/app.js";
 
 const getLocation = () => {
   const success = (pos) => {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
-    /*
-        fetchData(HSLData.apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/graphql'
-          },
-          body: HSLData.getQueryForStopsByLocation(lat, lon)
-        }).then(response => {
-          console.log(response);
-          const busList = document.querySelector('#bus-list');
-          for (const stop of response.data.stopsByRadius.edges) {
-    
-            const busStop = document.createElement('li');
-            const busStopName = document.createElement('p');
-            busStopName.innerHTML = `Pysäkki: ${stop.node.stop.name} ${stop.node.stop.code}`;
-            const busRides = document.createElement('ul');
-            for (const ride of stop.node.stop.stoptimesWithoutPatterns) {
-    
-              let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000 + 7200000);
-    
-    
-              const timeLeftMinutes = ((time - new Date() - 7200000) / 1000 / 60).toFixed(0);
-    
-              const busRide = document.createElement('li');
-    
-              busRide.innerHTML = `Aika: ${time.toISOString().split('T')[1].split('.')[0].slice(0, 5)} Bussi: ${ride.trip.routeShortName} Minne: ${ride.headsign} Minuuttia jäljellä: ${timeLeftMinutes} min`;
-              busRides.appendChild(busRide);
-            }
-            busStop.appendChild(busStopName);
-    
-            busList.appendChild(busStop);
-            busList.appendChild(busRides);
-          }
-        });
-        */
     const weatherUrl = weatherData.getApiUrl(lat, lon);
 
     fetchData(weatherUrl).then(response => {
@@ -163,104 +109,31 @@ if (!navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(HSL, posError);
 }
 
-/* ULKOASU */
-
-const createPageList = (parentElementName) => {
-  const pages = document.querySelectorAll(parentElementName + ' > *');
-  const pageList = new Map();
-
-  pages.forEach((element, index) => {
-    pageList.set('#' + element.id, index);
-  });
-
-  return pageList;
-};
-
-const createNav = (parentElementName, pageList) => {
-  const parent = document.querySelector(parentElementName);
-  const ul = document.createElement('ul');
-  const pageIds = [...pageList.keys()];
-
-  pageIds.forEach((pageId) => {
-    const title = document.querySelector(pageId + ' h2').innerText;
-
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-
-    li.appendChild(a);
-    ul.appendChild(li);
-
-    a.innerText = title;
-    a.href = pageId;
-
-    a.addEventListener('click', (event) => {
-      event.preventDefault();
-
-      location = event.target.href;
-    });
-  });
-
-  parent.appendChild(ul);
-};
-
-const showPage = (pageList) => {
-  const pageIds = [...pageList.keys()];
-
-  pageIds.forEach((id) => {
-    document.querySelector(id).style.display = 'none';
-  });
-
-  if (pageList.has(location.hash)) {
-    document.querySelector(location.hash).style.display = 'block';
-  } else {
-    document.querySelector(pageIds[0]).style.display = 'block';
-  }
-};
-
-const nextPage = (pageList, forward = true) => {
-  let current = pageList.get(location.hash) || 0;
-  let next;
-
-  if (forward) {
-    next = current + 1;
-
-    if (next >= pageList.size) {
-      next = 0;
-    }
-  } else {
-    next = current - 1;
-
-    if (next < 0) {
-      next = pageList.size - 1;
-    }
-  }
-
-  location.hash = [...pageList.keys()][next];
-};
+/* APP */
 
 const initApp = () => {
-  const pageList = createPageList('main');
+  const pageList = app.createPageList('main');
 
-  createNav('nav', pageList);
+  app.createNav('nav', pageList);
 
   window.addEventListener('DOMContentLoaded', () => {
-    showPage(pageList);
+    app.showPage(pageList);
   });
 
   window.addEventListener('hashchange', () => {
-    showPage(pageList);
+    app.showPage(pageList);
   });
 
   const next = document.createElement('button');
   next.innerText = 'Seuraava';
-  next.addEventListener('click', (event) => {
-    nextPage(pageList);
+  next.addEventListener('click', () => {
+    app.nextPage(pageList);
   });
 
   const prev = document.createElement('button');
   prev.innerText = 'Edellinen';
-  prev.addEventListener('click', (event) => {
-    nextPage(pageList, false);
+  prev.addEventListener('click', () => {
+    app.nextPage(pageList, false);
   });
 
   document.querySelector('header').appendChild(prev);
@@ -269,12 +142,12 @@ const initApp = () => {
   /*
   window.addEventListener('keyup', (event) => {
     if (event.key === 'ArrowRight') {
-      nextPage(pageList);
+      app.nextPage(pageList);
     }
   });
   window.addEventListener('keyup', (event) => {
     if (event.key === 'ArrowLeft') {
-      nextPage(pageList, false);
+      app.nextPage(pageList, false);
     }
   });
   */
@@ -282,26 +155,17 @@ const initApp = () => {
 
 /* SIGNAGE */
 
-const niceMinutes = (time) => {
-  const minutes = time.getMinutes();
-  if (minutes < 10) {
-    return '0' + minutes;
-  } else {
-    return minutes;
-  }
-};
-
-const clock = () => {
+const clock = (parent) => {
   const time = new Date(Date.now());
-  const hours = time.getHours();
 
-  const minutes = niceMinutes(time);
-  return hours + '.' + minutes;
+  const hours = time.getHours();
+  const minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
+  parent.innerHTML = hours + '.' + minutes;
+
+  setTimeout(() => clock(parent), 1000);
 };
 
-const carousel = (current, displayTime) => {
-  const slides = document.querySelectorAll('section');
-
+const carousel = (slides, pageIndicator, current, displayTime) => {
   if (current === slides.length) {
     current = 0;
   }
@@ -314,21 +178,23 @@ const carousel = (current, displayTime) => {
     }
   });
 
-  document.querySelector('#pages').innerHTML = `${current + 1} / ${slides.length}`;
+  pageIndicator.innerHTML = `${current + 1} / ${slides.length}`;
 
   current++;
 
-  setInterval(() => carousel(current, displayTime), displayTime);
+  setTimeout(() => carousel(slides, pageIndicator, current, displayTime), displayTime);
 };
 
 const initSignage = () => {
   const header = document.querySelector('header');
   header.innerHTML = `<div id="meta"><p id="clock"></p><p id="pages"></p></div>`;
 
-  document.querySelector('#clock').innerHTML = clock();
-  setInterval(() => document.querySelector('#clock').innerHTML = clock(), 1000);
+  const clockParent = document.querySelector('#clock');
+  clock(clockParent);
 
-  carousel(0, 3000);
+  const slides = document.querySelectorAll('section');
+  const pageIndicator = document.querySelector('#pages');
+  carousel(slides, pageIndicator, 0, 3000);
 
   //const indicator = document.querySelector('#indicator');
   //indicator.style.animation = `indicator ${displayTime / 1000}s linear infinite`;

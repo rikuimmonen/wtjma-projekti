@@ -69,5 +69,5 @@ const getQueryForStopsByLocation = (lat, lon) => {
   }`;
 };
 
-const HSLData = {apiUrl, getQueryForNextRidesByStopId, getQueryForStopsByLocation};
+const HSLData = { apiUrl, getQueryForNextRidesByStopId, getQueryForStopsByLocation };
 export default HSLData;

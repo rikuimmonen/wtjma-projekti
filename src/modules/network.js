@@ -33,4 +33,4 @@ const fetchData = async (url, options = {}, useProxy) => {
   return jsonData;
 };
 
-export {fetchData};
+export { fetchData };
