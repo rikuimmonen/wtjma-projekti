@@ -1,8 +1,8 @@
-import HSLData from "./modules/hsl-data";
-import { fetchData } from "./modules/network";
-import utils from "./modules/utils";
-import weatherData from "./modules/weather-data";
-import app from "./modules/app.js";
+import HSLData from './modules/hsl-data';
+import {fetchData} from './modules/network';
+import weatherData from './modules/weather-data';
+import app from './modules/app';
+import signage from './modules/signage';
 
 const getLocation = () => {
   const success = (pos) => {
@@ -14,16 +14,20 @@ const getLocation = () => {
       console.log(response.properties);
       const hour = new Date().getHours();
       for (const time of response.properties.timeseries) {
-        if (hour == time.time.split('T')[1].split(':')[0]) {
+        if (hour === time.time.split('T')[1].split(':')[0]) {
           const weatherSymbol = document.querySelector('#weather-symbol');
           const temperatureP = document.querySelector('#temperature');
           const windSpeedP = document.querySelector('#wind-speed');
           const humidity = document.querySelector('#humidity');
 
-          weatherSymbol.setAttribute('src', 'assets/weathericon/' + time.data.next_1_hours.summary.symbol_code + '.svg');
-          temperatureP.innerHTML = time.data.instant.details.air_temperature + " \u2103";
+          weatherSymbol.setAttribute('src',
+            'assets/weathericon/' + time.data.next_1_hours.summary.symbol_code +
+            '.svg');
+          temperatureP.innerHTML = time.data.instant.details.air_temperature +
+            ' \u2103';
           windSpeedP.innerHTML = time.data.instant.details.wind_speed + ' ms';
-          humidity.innerHTML = time.data.instant.details.relative_humidity + ' %';
+          humidity.innerHTML = time.data.instant.details.relative_humidity +
+            ' %';
           break;
         }
       }
@@ -71,12 +75,15 @@ const bindHSL = (data) => {
       const contentRow = document.createElement('tr');
       table.appendChild(contentRow);
 
-      const rideContent = [timeLeftMinutes + ' min', ride.trip.routeShortName, ride.headsign];
+      const rideContent = [
+        timeLeftMinutes + ' min',
+        ride.trip.routeShortName,
+        ride.headsign];
       for (const item of rideContent) {
         const cell = document.createElement('td');
         cell.innerText = item;
         contentRow.appendChild(cell);
-      };
+      }
     }
   }
 };
@@ -85,13 +92,11 @@ const getHSL = async (pos) => {
   const lat = pos.coords.latitude;
   const lon = pos.coords.longitude;
 
-  const data = await fetchData(HSLData.apiUrl, {
+  return await fetchData(HSLData.apiUrl, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/graphql' },
-    body: HSLData.getQueryForStopsByLocation(lat, lon)
+    headers: {'Content-Type': 'application/graphql'},
+    body: HSLData.getQueryForStopsByLocation(lat, lon),
   });
-
-  return data;
 };
 
 const HSL = async (pos) => {
@@ -109,80 +114,11 @@ if (!navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(HSL, posError);
 }
 
-/* APP */
-
 const initApp = () => {
   const pageList = app.createPageList('main');
 
   app.createNav('nav', pageList);
-
-  window.addEventListener('DOMContentLoaded', () => {
-    app.showPage(pageList);
-  });
-
-  window.addEventListener('hashchange', () => {
-    app.showPage(pageList);
-  });
-
-  const next = document.createElement('button');
-  next.innerText = 'Seuraava';
-  next.addEventListener('click', () => {
-    app.nextPage(pageList);
-  });
-
-  const prev = document.createElement('button');
-  prev.innerText = 'Edellinen';
-  prev.addEventListener('click', () => {
-    app.nextPage(pageList, false);
-  });
-
-  document.querySelector('header').appendChild(prev);
-  document.querySelector('header').appendChild(next);
-
-  /*
-  window.addEventListener('keyup', (event) => {
-    if (event.key === 'ArrowRight') {
-      app.nextPage(pageList);
-    }
-  });
-  window.addEventListener('keyup', (event) => {
-    if (event.key === 'ArrowLeft') {
-      app.nextPage(pageList, false);
-    }
-  });
-  */
-};
-
-/* SIGNAGE */
-
-const clock = (parent) => {
-  const time = new Date(Date.now());
-
-  const hours = time.getHours();
-  const minutes = time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
-  parent.innerHTML = hours + '.' + minutes;
-
-  setTimeout(() => clock(parent), 1000);
-};
-
-const carousel = (slides, pageIndicator, current, displayTime) => {
-  if (current === slides.length) {
-    current = 0;
-  }
-
-  slides.forEach((element, index) => {
-    if (index === current) {
-      element.style.display = 'block';
-    } else {
-      element.style.display = 'none';
-    }
-  });
-
-  pageIndicator.innerHTML = `${current + 1} / ${slides.length}`;
-
-  current++;
-
-  setTimeout(() => carousel(slides, pageIndicator, current, displayTime), displayTime);
+  app.addSectionNavButtons(pageList);
 };
 
 const initSignage = () => {
@@ -190,25 +126,11 @@ const initSignage = () => {
   header.innerHTML = `<div id="meta"><p id="clock"></p><p id="pages"></p></div>`;
 
   const clockParent = document.querySelector('#clock');
-  clock(clockParent);
+  signage.clock(clockParent);
 
   const slides = document.querySelectorAll('section');
   const pageIndicator = document.querySelector('#pages');
-  carousel(slides, pageIndicator, 0, 3000);
-
-  //const indicator = document.querySelector('#indicator');
-  //indicator.style.animation = `indicator ${displayTime / 1000}s linear infinite`;
-
-  /*
-  const lunchList = document.querySelector('#lunch ul');
-  let lunchFontSize = 1;
-  lunchList.style.lineHeight = 1.5;
-
-  while (lunchList.scrollHeight > lunchList.clientHeight) {
-    lunchFontSize = 0.95 * lunchFontSize;
-    lunchList.style.fontSize = lunchFontSize * 0.95 + 'em';
-  }
-  */
+  signage.carousel(slides, pageIndicator, 0, 3000);
 };
 
 if (location.search) {
