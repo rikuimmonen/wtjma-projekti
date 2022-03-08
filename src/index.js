@@ -124,7 +124,6 @@ const initApp = () => {
 const initSignage = () => {
   const header = document.querySelector('header');
   header.innerHTML = `<div id="meta"><p id="clock"></p><p id="pages"></p></div>`;
-
   const clockParent = document.querySelector('#clock');
   signage.clock(clockParent);
 
