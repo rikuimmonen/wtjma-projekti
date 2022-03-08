@@ -68,6 +68,39 @@ const getQueryForStopsByLocation = (lat, lon) => {
     }
   }`;
 };
-
-const HSLData = {apiUrl, getQueryForNextRidesByStopId, getQueryForStopsByLocation};
+const getQueryForNextRidesByLocation = (lat, lon) => {
+  return `{
+  nearest(lat: ${lat}, lon: ${lon}, maxDistance: 600, filterByModes: BUS) {
+    edges {
+      node {
+        place {
+          ...on DepartureRow {
+            stop {
+              lat
+              lon
+              name
+              code
+            }
+            stoptimes (numberOfDepartures:5, timeRange: 10000 ) {
+              serviceDay
+              scheduledDeparture
+              realtimeDeparture
+              realtimeArrival
+              trip {
+                route {
+                  shortName
+                  longName
+                }
+              }
+              headsign
+            }
+          }
+        }
+        distance
+      }
+    }
+  }
+}`;
+};
+const HSLData = {apiUrl, getQueryForNextRidesByStopId, getQueryForStopsByLocation, getQueryForNextRidesByLocation};
 export default HSLData;

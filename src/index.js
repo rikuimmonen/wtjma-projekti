@@ -159,12 +159,21 @@ const useStoredCampus = () => {
       console.log(response.properties.timeseries);
     });
 
+    // fetchData(HSLData.apiUrl, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/graphql' },
+    //   body: HSLData.getQueryForStopsByLocation(lat, lon)
+    // }).then(response => {
+    //   bindHSL(response);
+    //   console.log('stops by location', response);
+    // });
     fetchData(HSLData.apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/graphql' },
-      body: HSLData.getQueryForStopsByLocation(lat, lon)
+      body: HSLData.getQueryForNextRidesByLocation(lat, lon)
     }).then(response => {
-      bindHSL(response);
+      console.log('response rides by location', response);
+      ridesByLocation(response);
     });
   }
 };
@@ -180,7 +189,7 @@ setLocationButton.addEventListener('click', () => {
     const data = await fetchData(HSLData.apiUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/graphql' },
-      body: HSLData.getQueryForStopsByLocation(lat, lon)
+      body: HSLData.getQueryForNextRidesByLocation(lat, lon)
     });
 
     return data;
@@ -188,7 +197,8 @@ setLocationButton.addEventListener('click', () => {
 
   const HSL = async (pos) => {
     const data = await getHSL(pos);
-    bindHSL(data);
+    // bindHSL(data);
+    ridesByLocation(data);
   };
 
   const posError = (err) => {
@@ -253,7 +263,42 @@ pickLocationButton.addEventListener('click', () => {
   });
 });
 
+const ridesByLocation = (data) => {
+  const container = document.querySelector('#hsl');
+  container.innerHTML = '';
+  const table = document.createElement('table');
+  const tableHeaders = ['Lähtee', 'Linja', 'Pysäkki', 'Määränpää'];
+  const headerRow = document.createElement('tr');
+  for (const header of tableHeaders) {
+    const headerCell = document.createElement('th');
+    headerCell.innerText = header;
+    headerRow.appendChild(headerCell);
+  }
+  table.appendChild(headerRow);
+  container.appendChild(table);
+  for (const ride of data.data.nearest.edges) {
+    console.log(ride.node.place);
 
+    try {
+
+      const time = new Date((ride.node.place.stoptimes[0].realtimeArrival + ride.node.place.stoptimes[0].serviceDay) * 1000);
+      const timeLeftMinutes = ((time - Date.now()) / 1000 / 60).toFixed();
+
+      const contentRow = document.createElement('tr');
+      table.appendChild(contentRow);
+
+      const rideContent = [timeLeftMinutes + ' min', ride.node.place.stoptimes[0].trip.route.shortName, ride.node.place.stop.name + ' ' + ride.node.place.stop.code, ride.node.place.stoptimes[0].headsign];
+      for (const item of rideContent) {
+        const cell = document.createElement('td');
+        cell.innerText = item;
+        contentRow.appendChild(cell);
+      };
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
+
+};
 
 const bindHSL = (data) => {
   const container = document.querySelector('#hsl');
