@@ -29,8 +29,7 @@ const printMenu = (menu) => {
 };
 
 const getLunch = () => {
-  const storedCampus = JSON.parse(localStorage.getItem('location'));
-  console.log(storedCampus.nameFi);
+  const storedCampus = JSON.parse(localStorage.getItem('location')) || { "location": "" };
   const campusName = storedCampus.nameFi;
   switch (campusName) {
     case 'Arabian kampus':
