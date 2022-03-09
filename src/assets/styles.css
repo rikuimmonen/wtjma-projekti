@@ -159,5 +159,6 @@ section header {
   main {
     border: 1px solid #eee;
     margin: 3em;
+    width: 36em;
   }
 }

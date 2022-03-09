@@ -149,6 +149,8 @@ const getStoredCampus = () => {
 
 const useStoredCampus = () => {
   if (getStoredCampus()) {
+    utils.getLunch();
+
     const lat = getStoredCampus().lat;
     const lon = getStoredCampus().lon;
     const weatherUrl = weatherData.getApiUrl(lat, lon);
@@ -309,7 +311,7 @@ const ridesByLocation = (data) => {
   }
 
 };
-utils.getLunch();
+
 const bindHSL = (data) => {
   const container = document.querySelector('#hsl');
   container.innerHTML = '';
@@ -349,8 +351,6 @@ const bindHSL = (data) => {
   }
 };
 
-utils.getLunch();
-
 const initApp = () => {
   const pageList = app.createPageList('main');
   app.createNav('nav', pageList);
@@ -368,25 +368,34 @@ const initSignage = () => {
   const pageIndicator = document.querySelector('#pages');
   const clockParent = document.querySelector('#clock');
   signage.clock(clockParent);
-  signage.carousel(slides, pageIndicator, 0, 1000);
+  signage.carousel(slides, pageIndicator, 0, 5000);
+};
+
+const saveCampus = (campusesIndex) => {
+  return {
+    'lat': campuses[campusesIndex].lat,
+    'lon': campuses[campusesIndex].lon,
+    'nameFi': campuses[campusesIndex].campusNameFi,
+    'nameEn': campuses[campusesIndex].campusNameEn,
+  };
 };
 
 if (location.search) {
   switch (location.search) {
     case '?campus=arabia':
-      localStorage.setItem('location', JSON.stringify(campuses[0]));
+      localStorage.setItem('location', JSON.stringify(saveCampus(0)));
       break;
     case '?campus=karamalmi':
-      localStorage.setItem('location', JSON.stringify(campuses[1]));
+      localStorage.setItem('location', JSON.stringify(saveCampus(1)));
       break;
     case '?campus=myllypuro':
-      localStorage.setItem('location', JSON.stringify(campuses[2]));
+      localStorage.setItem('location', JSON.stringify(saveCampus(2)));
       break;
     case '?campus=myyrmaki':
-      localStorage.setItem('location', JSON.stringify(campuses[3]));
+      localStorage.setItem('location', JSON.stringify(saveCampus(3)));
       break;
     default:
-      localStorage.setItem('location', JSON.stringify(campuses[1]));
+      localStorage.setItem('location', JSON.stringify(saveCampus(1)));
       break;
   }
   useStoredCampus();

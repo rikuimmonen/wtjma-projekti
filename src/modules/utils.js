@@ -29,7 +29,7 @@ const printMenu = (menu) => {
 };
 
 const getLunch = () => {
-  const storedCampus = JSON.parse(localStorage.getItem('location')) || { "location": "" };
+  const storedCampus = JSON.parse(localStorage.getItem('location'));
   const campusName = storedCampus.nameFi;
   switch (campusName) {
     case 'Arabian kampus':
@@ -103,8 +103,6 @@ fetchData(LuovaData.dataUrl, {}, 'allorigins').then(data => {
   console.log('LUOVA COURSES', courses);
   //printMenu(courses, 'luovaMenu');
 });*/
-
-getLunch();
 
 const utils = {getDayIndex, printMenu, getLunch};
 export default utils;
