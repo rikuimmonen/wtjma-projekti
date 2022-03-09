@@ -301,7 +301,7 @@ const ridesByLocation = (data) => {
   }
 
 };
-
+utils.getLunch();
 const bindHSL = (data) => {
   const container = document.querySelector('#hsl');
   container.innerHTML = '';

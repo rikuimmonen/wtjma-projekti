@@ -81,7 +81,7 @@ const getQueryForNextRidesByLocation = (lat, lon) => {
               name
               code
             }
-            stoptimes (numberOfDepartures:5, timeRange: 10000 ) {
+            stoptimes (numberOfDepartures:5, timeRange: 5000 ) {
               serviceDay
               scheduledDeparture
               realtimeDeparture

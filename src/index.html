@@ -1,33 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="fi">
 
 <head>
   <meta charset="utf-8" />
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
-  <link rel="stylesheet" href="assets/styles.css" />
+  <link href="assets/styles.css" rel="stylesheet" />
 </head>
 
 <body>
   <header>
-    <h1>Kampuskaveri</h1>
-    <nav></nav>
+    <input id="show-menu" type="checkbox">
+    <label for="show-menu" id="show-menu-label">Valikko</label>
+
+    <div id="menu">
+      <div id="brand">
+        <h1>
+          <img alt="Metropolia logo" height="181" src="./assets/metropolia_.png" width="800">
+          Metropolia Kampuskaveri
+        </h1>
+
+        <p id="campus">Karaportin kampus</p>
+      </div>
+
+      <nav>
+      </nav>
+    </div>
   </header>
+
   <main>
+    <h2>Kampus</h2>
+
     <section id="location">
+      <header>
+        <h3>Sijainti</h3>
+      </header>
       <button id="set-location">Käytä sijaintiasi</button>
       <button id="pick-location">Valitse sijantisi</button>
       <div id="locations-list"></div>
     </section>
-    <section id="weather-section">
-      <h2 id="weather-header">Sää</h2>
-      <img src="" alt="symbol" id="weather-symbol" width="200" height="200">
 
+    <section id="weather-section">
+      <header>
+        <h3 id="weather-header">Sää</h3>
+      </header>
+      <img alt="symbol" height="200" id="weather-symbol" src="" width="200">
+      <ul id="weather-data">
+        <li class="weather-list-item">
+          <p id="temperature"></p>
+        </li>
+        <li class="weather-list-item">
+          <p id="wind-speed"></p>
+        </li>
+        <li class="weather-list-item">
+          <p id="humidity"></p>
+        </li>
+      </ul>
     </section>
 
     <section id="hsl">
-      <h2>Bussiaikataulut</h2>
+      <header>
+        <h3>Bussiaikataulut</h3>
+      </header>
+    </section>
+
+    <section id="lunch">
+      <header>
+        <h3>Lounas</h3>
+      </header>
+    </section>
+
+    <section id="tiedote">
+      <header>
+        <h3>Tiedote</h3>
+      </header>
+
+      <h4>Metropolia palaa kampuspainotteiseen toimintaan 14.2.</h4>
+
+      <p>
+        Metropolia palaa kampuspainotteiseen toimintaan 14.2.2022 alkaen tavoitteena koko korkeakouluyhteisön
+        hyvinvoinnin
+        edistäminen ja yhteisöllisyyden tukeminen.
+      </p>
+      <p>
+        Opetus- ja kulttuuriministeriön suositus korkeakoulujen etäopetuksesta päättyi 31.1 2022.
+      </p>
+      <p>
+        Metropoliassa palataan 14.2. alkaen työskentelyyn, jossa opetuksen toteutustapa määrittyy oppimistavoitteiden
+        pohjalta tarkoituksenmukaisimmalla tavalla. Kampuksilla tapahtuvaa opetusta lisätään.
+      </p>
     </section>
   </main>
 </body>
