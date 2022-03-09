@@ -1,11 +1,10 @@
-import campuses from "./assets/campusCoordinates";
-import HSLData from "./modules/hsl-data";
-import { fetchData } from "./modules/network";
-import utils from "./modules/utils";
-import weatherData from "./modules/weather-data";
+import campuses from './assets/campusCoordinates';
+import HSLData from './modules/hsl-data';
+import {fetchData} from './modules/network';
+import utils from './modules/utils';
+import weatherData from './modules/weather-data';
 import signage from './modules/signage';
 import app from './modules/app';
-
 
 /*
 console.log(new Date());
@@ -32,7 +31,6 @@ const renderWeather = (array) => {
   console.log(array);
   const weatherSection = document.querySelector('#weather-section');
 
-
   weatherTable.setAttribute('id', 'weather-table');
   weatherTable.innerHTML = '';
   const tableHeaders = ['Tänään', 'Huomenna', 'Ylihuomenna'];
@@ -40,7 +38,9 @@ const renderWeather = (array) => {
   weatherSection.appendChild(weatherTable);
   let i = 0;
   for (const time of array) {
-    weatherSymbol.setAttribute('src', 'assets/weathericon/' + array[i].data.next_1_hours.summary.symbol_code + '.svg');
+    weatherSymbol.setAttribute('src',
+      'assets/weathericon/' + array[i].data.next_1_hours.summary.symbol_code +
+      '.svg');
     const tr = document.createElement('tr');
     const headerCell = document.createElement('th');
     headerCell.innerHTML = tableHeaders[i];
@@ -48,7 +48,8 @@ const renderWeather = (array) => {
     if (hour == time.time.split('T')[1].split(':')[0]) {
 
       const temperature = document.createElement('td');
-      temperature.innerHTML = time.data.instant.details.air_temperature + " \u2103";
+      temperature.innerHTML = time.data.instant.details.air_temperature +
+        ' \u2103';
       const wind = document.createElement('td');
       wind.innerHTML = time.data.instant.details.wind_speed + ' ms';
       const humidity = document.createElement('td');
@@ -61,7 +62,6 @@ const renderWeather = (array) => {
     }
 
     weatherTable.appendChild(tr);
-
 
     if (i > 2) {
       break;
@@ -142,8 +142,6 @@ const getLocation = () => {
   }
 };
 
-
-
 const getStoredCampus = () => {
   const storedCampus = JSON.parse(localStorage.getItem('location'));
   return storedCampus;
@@ -171,8 +169,8 @@ const useStoredCampus = () => {
     // });
     fetchData(HSLData.apiUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/graphql' },
-      body: HSLData.getQueryForNextRidesByLocation(lat, lon)
+      headers: {'Content-Type': 'application/graphql'},
+      body: HSLData.getQueryForNextRidesByLocation(lat, lon),
     }).then(response => {
       console.log('response rides by location', response);
       ridesByLocation(response);
@@ -190,8 +188,8 @@ setLocationButton.addEventListener('click', () => {
 
     const data = await fetchData(HSLData.apiUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/graphql' },
-      body: HSLData.getQueryForNextRidesByLocation(lat, lon)
+      headers: {'Content-Type': 'application/graphql'},
+      body: HSLData.getQueryForNextRidesByLocation(lat, lon),
     });
 
     return data;
@@ -251,10 +249,14 @@ pickLocationButton.addEventListener('click', () => {
   button.addEventListener('click', () => {
 
     const campus = {
-      'lat': document.querySelector('input[name=selected_campus]:checked').getAttribute('data-lat'),
-      'lon': document.querySelector('input[name=selected_campus]:checked').getAttribute('data-lon'),
-      'nameFi': document.querySelector('input[name=selected_campus]:checked').getAttribute('data-name-fi'),
-      'nameEn': document.querySelector('input[name=selected_campus]:checked').getAttribute('data-name-en'),
+      'lat': document.querySelector('input[name=selected_campus]:checked').
+        getAttribute('data-lat'),
+      'lon': document.querySelector('input[name=selected_campus]:checked').
+        getAttribute('data-lon'),
+      'nameFi': document.querySelector('input[name=selected_campus]:checked').
+        getAttribute('data-name-fi'),
+      'nameEn': document.querySelector('input[name=selected_campus]:checked').
+        getAttribute('data-name-en'),
     };
 
     localStorage.setItem('location', JSON.stringify(campus));
@@ -266,8 +268,8 @@ pickLocationButton.addEventListener('click', () => {
 });
 
 const ridesByLocation = (data) => {
-  const container = document.querySelector('#hsl');
-  container.innerHTML = '';
+  const container = document.createElement('div');
+  document.querySelector('#hsl header').after(container);
   const table = document.createElement('table');
   const tableHeaders = ['Lähtee', 'Linja', 'Pysäkki', 'Määränpää'];
   const headerRow = document.createElement('tr');
@@ -283,18 +285,24 @@ const ridesByLocation = (data) => {
 
     try {
 
-      const time = new Date((ride.node.place.stoptimes[0].realtimeArrival + ride.node.place.stoptimes[0].serviceDay) * 1000);
+      const time = new Date((ride.node.place.stoptimes[0].realtimeArrival +
+        ride.node.place.stoptimes[0].serviceDay) * 1000);
       const timeLeftMinutes = ((time - Date.now()) / 1000 / 60).toFixed();
 
       const contentRow = document.createElement('tr');
       table.appendChild(contentRow);
 
-      const rideContent = [timeLeftMinutes + ' min', ride.node.place.stoptimes[0].trip.route.shortName, ride.node.place.stop.name + ' ' + ride.node.place.stop.code, ride.node.place.stoptimes[0].headsign];
+      const rideContent = [
+        timeLeftMinutes + ' min',
+        ride.node.place.stoptimes[0].trip.route.shortName,
+        ride.node.place.stop.name + ' ' + ride.node.place.stop.code,
+        ride.node.place.stoptimes[0].headsign];
       for (const item of rideContent) {
         const cell = document.createElement('td');
         cell.innerText = item;
         contentRow.appendChild(cell);
-      };
+      }
+
     } catch (e) {
       console.log(e.message);
     }
@@ -328,7 +336,10 @@ const bindHSL = (data) => {
       const contentRow = document.createElement('tr');
       table.appendChild(contentRow);
 
-      const rideContent = [timeLeftMinutes + ' min', ride.trip.routeShortName, ride.headsign];
+      const rideContent = [
+        timeLeftMinutes + ' min',
+        ride.trip.routeShortName,
+        ride.headsign];
       for (const item of rideContent) {
         const cell = document.createElement('td');
         cell.innerText = item;
