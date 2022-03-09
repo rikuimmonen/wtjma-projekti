@@ -18,14 +18,14 @@ const getDayIndex = () => {
 };
 
 const printMenu = (menu) => {
-  const ul = document.querySelector('#lunch');
-  ul.innerHTML = '';
+  const ul = document.createElement('ul');
   for (const course of menu) {
     console.log(course);
     const li = document.createElement('li');
     li.textContent = course;
     ul.appendChild(li);
   }
+  document.querySelector('#lunch header').after(ul);
 };
 
 const getLunch = () => {
@@ -35,13 +35,13 @@ const getLunch = () => {
   switch (campusName) {
     case 'Arabian kampus':
       fetchData(LuovaData.dataUrl, {}, 'allorigins').then(data => {
-        const courses = LuovaData.createMenus(data[getDayIndex()+1]);
+        const courses = LuovaData.createMenus(data[getDayIndex() + 1]);
         console.log('LUOVA COURSES', courses);
         printMenu(courses);
       });
       break;
     case 'Karamalmin kampus':
-      fetchData(FazerData.dataUrlFi, {},'fazer-php').then(data => {
+      fetchData(FazerData.dataUrlFi, {}, 'fazer-php').then(data => {
         const courses = FazerData.createDayMenu(data.LunchMenus, getDayIndex());
         console.log('FAZER COURSES', courses);
         printMenu(courses);
@@ -107,5 +107,5 @@ fetchData(LuovaData.dataUrl, {}, 'allorigins').then(data => {
 
 getLunch();
 
-const utils = {};
+const utils = {getDayIndex, printMenu, getLunch};
 export default utils;

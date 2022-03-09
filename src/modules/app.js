@@ -5,7 +5,7 @@
  */
 
 const createPageList = (parentElementName) => {
-  const pages = document.querySelectorAll(parentElementName + ' > *');
+  const pages = document.querySelectorAll(parentElementName + ' > section');
   const pageList = new Map();
 
   pages.forEach((element, index) => {
@@ -27,7 +27,7 @@ const createNav = (parentElementName, pageList) => {
   const pageIds = [...pageList.keys()];
 
   pageIds.forEach((pageId) => {
-    const title = document.querySelector(pageId + ' h2').innerText;
+    const title = document.querySelector(pageId + ' h3').innerText;
     const li = document.createElement('li');
     const a = document.createElement('a');
 
@@ -39,6 +39,7 @@ const createNav = (parentElementName, pageList) => {
     a.addEventListener('click', (event) => {
       event.preventDefault();
       location = event.target.href;
+      document.querySelector('#show-menu').checked = false;
     });
   });
 
@@ -120,8 +121,11 @@ const addSectionNavButtons = (pageList) => {
       app.nextPage(pageList, false);
     });
 
-    document.querySelector(id).appendChild(prev);
-    document.querySelector(id).appendChild(next);
+    const sectionsNav = document.createElement('div');
+    sectionsNav.className = 'sections-nav';
+    sectionsNav.appendChild(prev);
+    sectionsNav.appendChild(next);
+    document.querySelector(id + ' header').appendChild(sectionsNav);
   }
 };
 
