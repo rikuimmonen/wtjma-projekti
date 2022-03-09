@@ -2,106 +2,162 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-size: 1em;
 }
 
 html {
-  font-size: clamp(0.875em, 2.4vw, 1.25em);
+  font-size: 100%;
 }
 
 body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.5em;
-  font-family: sans-serif;
+  background: #fff;
+  color: #000;
 }
 
-header {
+#show-menu {
+  position: absolute;
+  left: -9999px;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+#show-menu-label {
+  display: block;
+  position: absolute;
   padding: 1em;
-  border-bottom: 1px solid #000;
+  right: 0;
+  z-index: 2;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-h1 {
-  font-size: 1em;
+#show-menu:checked~#show-menu-label {
+  color: #fff;
 }
 
-main {
-  padding: 1em;
+#show-menu-label::after {
+  content: "\02261";
+  display: block;
+  float: left;
+  margin-right: 0.5em;
 }
 
-h2 {
-  font-size: 2em;
-  line-height: 1;
-  font-weight: 400;
-  margin: 2rem 0;
+#show-menu:checked~#show-menu-label::after {
+  content: "\000D7";
 }
 
-table {
-  border-collapse: collapse;
+#menu {
+  position: absolute;
+  background: #333;
+  color: #fff;
+  z-index: 1;
+  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  display: none;
 }
 
-#weather-section {
-  background-color: aquamarine;
-  width: fit-content;
+#show-menu:checked~#show-menu-label~#menu {
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-#weather-data {
-  display: flex;
-  list-style-type: none;
-  align-items: center;
-  padding: 0;
-  margin: 0;
-}
-.weather-list-item {
-  margin: 0 10px;
+  justify-content: center;
 }
 
-
-#hsl h3 {
-  font-size: 1em;
-  margin: 3em 0 1em;
+#menu img {
+  display: block;
+  height: 3em;
+  width: auto;
+  margin: 0 auto 1em;
 }
 
-#hsl .stop-code {
-  border: 1px solid #666;
-  padding: 0.2em 0.4em;
-  font-weight: 400;
-  font-size: 0.8em;
-  border-radius: 0.2rem;
-  margin-left: 0.5rem;
-}
-
-#hsl table {
-  text-align: left;
-  width: 100%;
-}
-
-#hsl th {
-  border-bottom: 1px solid #333;
-  font-weight: 400;
+#menu #campus {
   text-transform: uppercase;
-  font-size: 0.8em;
   letter-spacing: 0.1em;
 }
 
-#hsl td {
+#menu ul {
+  margin: 4em 0 0;
+  list-style: none;
+}
+
+#menu ul li a {
+  padding: 0.5em 0;
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#menu ul li#settings::before {
+  content: " ";
+  display: block;
+  margin: 1.5em auto;
+  border-top: 0.1em solid #fff;
+  width: 1em;
+}
+
+main h2 {
+  background: #eee;
+  padding: 1em;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+section {
+  padding: 1em;
+}
+
+section header {
+  padding: 1em;
+  margin: -1em -1em 0;
   border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
 }
 
-#hsl th, #hsl td {
-  padding: 0.2rem 0;
+.sections-nav {
+  display: flex;
 }
 
-#hsl td:nth-child(1), #hsl td:nth-child(1) {
-  width: 25%;
+.sections-nav button {
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  background: inherit;
+  border: inherit;
+  border-left: 1px solid #eee;
+  display: block;
+  margin: -1em 0;
+  padding: 1em;
+  cursor: pointer;
 }
 
-#hsl td:nth-child(2), #hsl td:nth-child(2) {
-  width: 17%;
+.sections-nav button+button {
+  margin-right: -1em;
 }
 
-#hsl td:nth-child(3), #hsl td:nth-child(3) {
-  width: 58%;
-}
-#weather-table td {
-  padding: 10px;
+@media all and (min-width: 1024px) {
+  body {
+    display: flex;
+  }
+
+  #show-menu,
+  #show-menu-label {
+    display: none;
+  }
+
+  #menu {
+    position: static;
+    display: block;
+    width: auto;
+    padding: 3em;
+  }
+
+  main {
+    border: 1px solid #eee;
+    margin: 3em;
+  }
 }

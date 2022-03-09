@@ -3,6 +3,8 @@ import HSLData from "./modules/hsl-data";
 import { fetchData } from "./modules/network";
 import utils from "./modules/utils";
 import weatherData from "./modules/weather-data";
+import signage from './modules/signage';
+import app from './modules/app';
 
 
 /*
@@ -331,128 +333,54 @@ const bindHSL = (data) => {
         const cell = document.createElement('td');
         cell.innerText = item;
         contentRow.appendChild(cell);
-      };
+      }
     }
   }
 };
 
+utils.getLunch();
 
-
-/* ULKOASU */
-
-const createPageList = (parentElementName) => {
-  const pages = document.querySelectorAll(parentElementName + ' > *');
-  const pageList = new Map();
-
-  pages.forEach((element, index) => {
-    pageList.set('#' + element.id, index);
-  });
-
-  return pageList;
+const initApp = () => {
+  const pageList = app.createPageList('main');
+  app.createNav('nav', pageList);
+  app.addSectionNavButtons(pageList);
 };
 
-const createNav = (parentElementName, pageList) => {
-  const parent = document.querySelector(parentElementName);
-  const ul = document.createElement('ul');
-  const pageIds = [...pageList.keys()];
-
-  pageIds.forEach((pageId) => {
-    const title = document.querySelector(pageId + ' h2').innerText;
-
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-
-    li.appendChild(a);
-    ul.appendChild(li);
-
-    a.innerText = title;
-    a.href = pageId;
-
-    a.addEventListener('click', (event) => {
-      event.preventDefault();
-
-      location = event.target.href;
-    });
-  });
-
-  parent.appendChild(ul);
+const initSignage = () => {
+  const style = document.querySelector('link[rel="stylesheet"]');
+  style.href = './assets/ds.css';
+  document.querySelector('#location').remove();
+  document.querySelector('h2').remove();
+  const slides = document.querySelectorAll('section');
+  document.querySelector(
+    'header').innerHTML = '<div id="meta"><p id="clock"></p><p id="pages"></p></div>';
+  const pageIndicator = document.querySelector('#pages');
+  const clockParent = document.querySelector('#clock');
+  signage.clock(clockParent);
+  signage.carousel(slides, pageIndicator, 0, 1000);
 };
 
-const showPage = (pageList) => {
-  const pageIds = [...pageList.keys()];
-
-  pageIds.forEach((id) => {
-    document.querySelector(id).style.display = 'none';
-  });
-
-  if (pageList.has(location.hash)) {
-    document.querySelector(location.hash).style.display = 'block';
-  } else {
-    document.querySelector(pageIds[0]).style.display = 'block';
+if (location.search) {
+  switch (location.search) {
+    case '?campus=arabia':
+      localStorage.setItem('location', JSON.stringify(campuses[0]));
+      break;
+    case '?campus=karamalmi':
+      localStorage.setItem('location', JSON.stringify(campuses[1]));
+      break;
+    case '?campus=myllypuro':
+      localStorage.setItem('location', JSON.stringify(campuses[2]));
+      break;
+    case '?campus=myyrmaki':
+      localStorage.setItem('location', JSON.stringify(campuses[3]));
+      break;
+    default:
+      localStorage.setItem('location', JSON.stringify(campuses[1]));
+      break;
   }
-};
-
-const nextPage = (pageList, forward = true) => {
-  let current = pageList.get(location.hash) || 0;
-  let next;
-
-  if (forward) {
-    next = current + 1;
-
-    if (next >= pageList.size) {
-      next = 0;
-    }
-  } else {
-    next = current - 1;
-
-    if (next < 0) {
-      next = pageList.size - 1;
-    }
-  }
-
-  location.hash = [...pageList.keys()][next];
-};
-
-const init = () => {
-  const pageList = createPageList('main');
-
-  createNav('nav', pageList);
-
-  window.addEventListener('DOMContentLoaded', () => {
-    showPage(pageList);
-  });
-
-  window.addEventListener('hashchange', () => {
-    showPage(pageList);
-  });
-
-  const next = document.createElement('button');
-  next.innerText = 'Seuraava';
-  next.addEventListener('click', (event) => {
-    nextPage(pageList);
-  });
-
-  const prev = document.createElement('button');
-  prev.innerText = 'Edellinen';
-  prev.addEventListener('click', (event) => {
-    nextPage(pageList, false);
-  });
-
-  document.querySelector('header').appendChild(prev);
-  document.querySelector('header').appendChild(next);
-
-  /*
-  window.addEventListener('keyup', (event) => {
-    if (event.key === 'ArrowRight') {
-      nextPage(pageList);
-    }
-  });
-  window.addEventListener('keyup', (event) => {
-    if (event.key === 'ArrowLeft') {
-      nextPage(pageList, false);
-    }
-  });
-  */
-};
-useStoredCampus();
-init();
+  useStoredCampus();
+  initSignage();
+} else {
+  useStoredCampus();
+  initApp();
+}
