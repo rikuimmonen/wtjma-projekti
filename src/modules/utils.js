@@ -19,9 +19,12 @@ const getDayIndex = () => {
 
 const printMenu = (menu) => {
   const ul = document.createElement('ul');
+  ul.setAttribute('id', 'menu-list');
+
   for (const course of menu) {
     console.log(course);
     const li = document.createElement('li');
+
     li.textContent = course;
     ul.appendChild(li);
   }

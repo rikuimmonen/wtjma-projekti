@@ -214,6 +214,8 @@ setLocationButton.addEventListener('click', () => {
   }
 });
 
+
+
 const locationsList = document.querySelector('#locations-list');
 const pickLocationButton = document.querySelector('#pick-location');
 const radioHeader = document.createElement('h3');
@@ -262,17 +264,48 @@ pickLocationButton.addEventListener('click', () => {
     };
 
     localStorage.setItem('location', JSON.stringify(campus));
+    const signageButton = document.createElement('button');
 
+    signageButton.innerHTML = 'Signage';
+    const a = document.createElement('a');
+    const localCampus = JSON.parse(localStorage.getItem('location'));
+    const localName = localCampus.nameFi;
+    let link = '';
+    switch (localName){
+      case 'Arabian kampus':
+        link = 'arabia';
+        break;
+      case 'Karamalmin kampus':
+        link = 'karamalmi';
+        break;
+      case 'Myllypuron kampus':
+        link = 'myllypuro';
+        break;
+      case 'Myyrmäen kampus':
+        link = 'myyrmaki';
+        break;
+    }
+
+    document.querySelector('#location').appendChild(signageButton);
+    signageButton.addEventListener('click', ()=> {
+      window.location.href = 'http://users.metropolia.fi/~rikuimm/kampuskaveri/?campus=' + link;
+
+    });
     locationsList.style.display = 'none';
     useStoredCampus();
 
   });
 });
-
+/**
+ *Render bus data
+ * @param {array} data - bus data
+ */
 const ridesByLocation = (data) => {
+
   const container = document.createElement('div');
   document.querySelector('#hsl header').after(container);
   const table = document.createElement('table');
+
   const tableHeaders = ['Lähtee', 'Linja', 'Pysäkki', 'Määränpää'];
   const headerRow = document.createElement('tr');
   for (const header of tableHeaders) {
@@ -280,10 +313,11 @@ const ridesByLocation = (data) => {
     headerCell.innerText = header;
     headerRow.appendChild(headerCell);
   }
+
   table.appendChild(headerRow);
   container.appendChild(table);
   for (const ride of data.data.nearest.edges) {
-    console.log(ride.node.place);
+
 
     try {
 
