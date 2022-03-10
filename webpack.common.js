@@ -21,7 +21,7 @@ module.exports = {
       ],
     }),
     new HtmlWebpackPlugin({
-      title: 'PLACEHOLDER',
+      title: 'Metropolia Kampuskaveri',
       meta: {
         viewport: 'width=device-width, initial-scale=1.0',
       },

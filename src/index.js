@@ -177,6 +177,11 @@ const useStoredCampus = () => {
       console.log('response rides by location', response);
       ridesByLocation(response);
     });
+
+    if (getStoredCampus().nameFi) {
+      document.querySelector('h2').innerHTML = getStoredCampus().nameFi;
+      document.querySelector('#campus').innerHTML = getStoredCampus().nameFi;
+    }
   }
 };
 
