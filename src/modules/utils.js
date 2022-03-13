@@ -18,6 +18,10 @@ const getDayIndex = () => {
 };
 
 const printMenu = (menu) => {
+  if (document.querySelector('#lunch header + ul')) {
+    document.querySelector('#lunch header + ul').remove();
+  }
+
   const ul = document.createElement('ul');
   ul.setAttribute('id', 'menu-list');
 
@@ -67,45 +71,6 @@ const getLunch = () => {
       console.log('lol');
   }
 };
-
-/*//Sodexo Myyrmäki
-fetchData(SodexoData.dataUrl).then(data => {
-  const courses = SodexoData.createMenus(data.courses);
-  //console.log('MYRTSI COURSES', courses);
-  //printMenu(courses, 'sodexoMenu');
-});
-
-//Sodexo Myllypuro
-fetchData(MyllyData.dataUrl).then(data => {
-  const courses = MyllyData.createMenus(data.courses);
-  console.log('MYLLYPURO', courses);
-});
-
-const getDayIndex = () => {
-  let weekday = new Date().getDay() - 1;
-  // weekend no service, use fridays menu
-  if (weekday >= 5) {
-    weekday = 4;
-  } else if (weekday < 0) {
-    weekday = 4;
-  }
-  return weekday;
-};
-
-//Fazer Karaportti
-fetchData(FazerData.dataUrlFi, {},'fazer-php').then(data => {
-  const courses = FazerData.createDayMenu(data.LunchMenus, getDayIndex());
-  console.log('FAZER COURSES', courses);
-  //printMenu(courses, 'fazerMenu');
-});
-
-//Luova Arabia
-fetchData(LuovaData.dataUrl, {}, 'allorigins').then(data => {
-  //console.log('LUOVA DATA', data[getDayIndex()+1]);
-  const courses = LuovaData.createMenus(data[getDayIndex()+1]);
-  console.log('LUOVA COURSES', courses);
-  //printMenu(courses, 'luovaMenu');
-});*/
 
 const utils = {getDayIndex, printMenu, getLunch};
 export default utils;

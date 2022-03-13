@@ -6,30 +6,11 @@ import weatherData from './modules/weather-data';
 import signage from './modules/signage';
 import app from './modules/app';
 
-/*
-console.log(new Date());
-fetchData(HSLData.apiUrl, {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/graphql'
-  },
-  body: HSLData.getQueryForNextRidesByStopId(2132207)
-}).then(response => {
-  console.log(response);
-  const stop = response.data.stop;
-  console.log(new Date((stop.stoptimesWithoutPatterns[0].serviceDay + stop.stoptimesWithoutPatterns[0].realtimeArrival) * 1000 + 7200000).toISOString());
-  let time = new Date((stop.stoptimesWithoutPatterns[0].realtimeArrival + stop.stoptimesWithoutPatterns[0].serviceDay) * 1000 + 7200000);
-  document.querySelector('#hsl').innerHTML = `<p>
-      Pysäkki: ${stop.name} Bussi: ${stop.stoptimesWithoutPatterns[0].trip.routeShortName} Minne:  ${stop.stoptimesWithoutPatterns[0].headsign} Aika:
-      ${time.toISOString().split('T')[1].split('.')[0]}
-    </p>`;
-});
-*/
 const weatherTable = document.createElement('table');
 const renderWeather = (array) => {
   const hour = new Date().getHours();
   console.log(array);
-  const weatherSection = document.querySelector('#weather-section');
+  const weatherSection = document.querySelector('#weather');
 
   weatherTable.setAttribute('id', 'weather-table');
   weatherTable.innerHTML = '';
@@ -67,60 +48,11 @@ const renderWeather = (array) => {
       break;
     }
   }
-  // for (const time of array) {
-  //   if (hour == time.time.split('T')[1].split(':')[0]) {
-  //     const weatherSymbol = document.querySelector('#weather-symbol');
-  //     const temperatureP = document.querySelector('#temperature');
-  //     const windSpeedP = document.querySelector('#wind-speed');
-  //     const humidity = document.querySelector('#humidity');
-
-  //     weatherSymbol.setAttribute('src', 'assets/weathericon/' + time.data.next_1_hours.summary.symbol_code + '.svg');
-  //     temperatureP.innerHTML = time.data.instant.details.air_temperature + " \u2103";
-  //     windSpeedP.innerHTML = time.data.instant.details.wind_speed + ' ms';
-  //     humidity.innerHTML = time.data.instant.details.relative_humidity + ' %';
-  //     break;
-  //   }
-  // }
 };
 const getLocation = () => {
   const success = (pos) => {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
-    /*
-        fetchData(HSLData.apiUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/graphql'
-          },
-          body: HSLData.getQueryForStopsByLocation(lat, lon)
-        }).then(response => {
-          console.log(response);
-          const busList = document.querySelector('#bus-list');
-          for (const stop of response.data.stopsByRadius.edges) {
-
-            const busStop = document.createElement('li');
-            const busStopName = document.createElement('p');
-            busStopName.innerHTML = `Pysäkki: ${stop.node.stop.name} ${stop.node.stop.code}`;
-            const busRides = document.createElement('ul');
-            for (const ride of stop.node.stop.stoptimesWithoutPatterns) {
-
-              let time = new Date((ride.realtimeArrival + ride.serviceDay) * 1000 + 7200000);
-
-
-              const timeLeftMinutes = ((time - new Date() - 7200000) / 1000 / 60).toFixed(0);
-
-              const busRide = document.createElement('li');
-
-              busRide.innerHTML = `Aika: ${time.toISOString().split('T')[1].split('.')[0].slice(0, 5)} Bussi: ${ride.trip.routeShortName} Minne: ${ride.headsign} Minuuttia jäljellä: ${timeLeftMinutes} min`;
-              busRides.appendChild(busRide);
-            }
-            busStop.appendChild(busStopName);
-
-            busList.appendChild(busStop);
-            busList.appendChild(busRides);
-          }
-        });
-        */
     const weatherUrl = weatherData.getApiUrl(lat, lon);
 
     fetchData(weatherUrl).then(response => {
@@ -136,15 +68,12 @@ const getLocation = () => {
   if (!navigator.geolocation) {
     alert('Unable to retrieve your location');
   } else {
-
     navigator.geolocation.getCurrentPosition(success, err);
-
   }
 };
 
 const getStoredCampus = () => {
-  const storedCampus = JSON.parse(localStorage.getItem('location'));
-  return storedCampus;
+  return JSON.parse(localStorage.getItem('location'));
 };
 
 const useStoredCampus = () => {
@@ -161,14 +90,6 @@ const useStoredCampus = () => {
       console.log(response.properties.timeseries);
     });
 
-    // fetchData(HSLData.apiUrl, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/graphql' },
-    //   body: HSLData.getQueryForStopsByLocation(lat, lon)
-    // }).then(response => {
-    //   bindHSL(response);
-    //   console.log('stops by location', response);
-    // });
     fetchData(HSLData.apiUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/graphql'},
@@ -193,13 +114,11 @@ setLocationButton.addEventListener('click', () => {
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
 
-    const data = await fetchData(HSLData.apiUrl, {
+    return await fetchData(HSLData.apiUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/graphql'},
       body: HSLData.getQueryForNextRidesByLocation(lat, lon),
     });
-
-    return data;
   };
 
   const HSL = async (pos) => {
@@ -218,8 +137,6 @@ setLocationButton.addEventListener('click', () => {
     navigator.geolocation.getCurrentPosition(HSL, posError);
   }
 });
-
-
 
 const locationsList = document.querySelector('#locations-list');
 const pickLocationButton = document.querySelector('#pick-location');
@@ -276,7 +193,7 @@ pickLocationButton.addEventListener('click', () => {
     const localCampus = JSON.parse(localStorage.getItem('location'));
     const localName = localCampus.nameFi;
     let link = '';
-    switch (localName){
+    switch (localName) {
       case 'Arabian kampus':
         link = 'arabia';
         break;
@@ -292,8 +209,9 @@ pickLocationButton.addEventListener('click', () => {
     }
 
     document.querySelector('#location').appendChild(signageButton);
-    signageButton.addEventListener('click', ()=> {
-      window.location.href = 'http://users.metropolia.fi/~rikuimm/kampuskaveri/?campus=' + link;
+    signageButton.addEventListener('click', () => {
+      window.location.href = 'http://users.metropolia.fi/~rikuimm/kampuskaveri/?campus=' +
+        link;
 
     });
     locationsList.style.display = 'none';
@@ -323,7 +241,6 @@ const ridesByLocation = (data) => {
   container.appendChild(table);
   for (const ride of data.data.nearest.edges) {
 
-
     try {
 
       const time = new Date((ride.node.place.stoptimes[0].realtimeArrival +
@@ -335,12 +252,14 @@ const ridesByLocation = (data) => {
 
       const rideContent = [
         timeLeftMinutes + ' min',
-        ride.node.place.stoptimes[0].trip.route.shortName,
-        ride.node.place.stop.name + ' ' + ride.node.place.stop.code,
+        '<span class="route">' +
+        ride.node.place.stoptimes[0].trip.route.shortName + '</span>',
+        ride.node.place.stop.name + ' ' + '<span class="stop">' +
+        ride.node.place.stop.code + '</span>',
         ride.node.place.stoptimes[0].headsign];
       for (const item of rideContent) {
         const cell = document.createElement('td');
-        cell.innerText = item;
+        cell.innerHTML = item;
         contentRow.appendChild(cell);
       }
 

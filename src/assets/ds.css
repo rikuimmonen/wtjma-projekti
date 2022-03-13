@@ -5,13 +5,13 @@
 }
 
 html {
-  font-size: 2em;
+  font-size: 2vw;
 }
 
 body {
   background: #333;
   color: white;
-  font-family: arial, sans-serif;
+  font-family: -apple-system, blinkmacsystemfont, 'segoe ui', sans-serif;
   line-height: 1.5em;
 }
 
@@ -34,7 +34,7 @@ section {
   height: calc(100vh - 3.5em);
 }
 
-h1 {
+h3 {
   font-size: 1.5em;
   margin: 0 0 2rem;
   line-height: 1;
@@ -60,8 +60,8 @@ td {
   padding: 0.5em 0;
 }
 
-.linja,
-.pysakki {
+.route,
+.stop {
   border: 3px solid white;
   margin: 0 0.5rem 0 0;
   padding: 0.2rem 0.4rem;
@@ -70,7 +70,7 @@ td {
   font-weight: bold;
 }
 
-.pysakki {
+.stop {
   margin: 0 0 0 .4rem;
   font-weight: 400;
   border: 1px solid white;
@@ -86,19 +86,6 @@ td {
   margin-top: 1em;
 }
 
-#indicator {
-  position: absolute;
-  top: 0;
-  height: 0.25em;
-  background: #fff;
-}
-
-@keyframes indicator {
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 100%;
-  }
+main p + p {
+  margin-top: 1em;
 }

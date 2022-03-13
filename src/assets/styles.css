@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, blinkmacsystemfont, 'segoe ui', sans-serif;
   line-height: 1.5em;
   background: #fff;
   color: #000;
@@ -45,7 +45,7 @@ body {
 }
 
 #show-menu:checked~#show-menu-label::after {
-  content: "\000D7";
+  content: "\000d7";
 }
 
 #menu {
@@ -112,10 +112,16 @@ section {
 
 section header {
   padding: 1em;
-  margin: -1em -1em 0;
+  margin: -1em -1em 1em;
   border-bottom: 1px solid #eee;
   display: flex;
   justify-content: space-between;
+}
+
+section img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .sections-nav {
@@ -137,6 +143,42 @@ section header {
 
 .sections-nav button+button {
   margin-right: -1em;
+}
+
+#lunch ul {
+  list-style: none;
+}
+
+#lunch ul li + li {
+  margin-top: 1em;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+tr {
+  border-bottom: 1px solid #ccc;
+}
+
+tr+tr {
+  border-bottom: 1px solid #eee;
+}
+
+th,
+td {
+  vertical-align: top;
+  text-align: left;
+  padding: 0.5em 0;
+}
+
+th+th,td+td {
+  padding-left: 1em;
+}
+
+#tiedote p {
+  margin: 1em 0;
 }
 
 @media all and (min-width: 1024px) {
